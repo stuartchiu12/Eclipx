@@ -21,12 +21,7 @@ export default {
 
   },
   mounted () {
-    // load google api script
-    const scriptElement = document.createElement('script')
-    scriptElement.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=${this.APIKEY}&libraries=places`)
-    document.head.appendChild(scriptElement)
-
-    scriptElement.addEventListener('load', () => {
+    const loadPage = () => {
       const positionOptions = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -43,9 +38,28 @@ export default {
       // wire up autocomplete address bar
       this.autocomplete = new google.maps.places.Autocomplete(input, options)
       this.autocomplete.addListener('place_changed', this.fillinAddress)
-    })
+    }
+
+    // load google api script
+    const url = `https://maps.googleapis.com/maps/api/js?key=${this.APIKEY}&libraries=places`
+    if (this.isScriptLoaded(url)) {
+      loadPage()
+      return
+    }
+
+    const scriptElement = document.createElement('script')
+    scriptElement.setAttribute('src', url)
+    document.head.appendChild(scriptElement)
+    scriptElement.addEventListener('load', loadPage)
   },
   methods: {
+    isScriptLoaded (url) {
+      const scripts = document.getElementsByTagName('script')
+      for (const script of scripts) {
+        if (script.src === url) return true
+      }
+      return false
+    },
     success (pos) {
       this.crd = pos.coords
 
