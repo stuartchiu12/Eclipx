@@ -24,12 +24,11 @@ export default {
         password: this.password
       }
       const payload = { credentials: 'same-origin', mode: 'cors', method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } }
-      const that = this
       fetch('http://localhost:8000/login', payload)
         .then(res => res.json())
         .then(json => {
           sessionStorage.setItem('jwt', json.jwt)
-          that.$router.push('map')
+          this.$router.push('map')
         }).catch(err => {
           console.log(err)
         })

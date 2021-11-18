@@ -16,7 +16,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Map.vue'),
     beforeEnter: (to, from, next) => {
       if (!sessionStorage.getItem('jwt')) {
-        this.$router.push('')
+        next('/')
       } else {
         next()
       }
