@@ -36,7 +36,9 @@ app.post('/login', (req,res)=>{
 const verifyToken = async (req,res)=>{
     const jwt = req.headers.jwt;
 
+    //check if jwt is valid
     const {email}  = await admin.auth().verifyIdToken(jwt)
+    //get the role from firestore
     const emailProp = await admin.firestore().collection('users').where('email','==',email).get();
     const {admin:adminValue, readonly} = emailProp.docs[0].data();
     if(adminValue){
